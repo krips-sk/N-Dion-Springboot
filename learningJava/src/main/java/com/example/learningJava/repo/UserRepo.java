@@ -12,10 +12,12 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
 
 	
 
-	UserEntity findByEmpIDAndName(String emp,String name);
+//	UserEntity findByEmpIDAndName(String emp,String name);
 
 	List<UserEntity> findByCompany(String company);
 
-	UserEntity findByEmailAndPassword(String mail, String password);
+//	UserEntity findByEmailAndPassword(String mail, String password);
+
+	UserEntity findByEmail(String email);
 
 }
