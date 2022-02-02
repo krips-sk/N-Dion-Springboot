@@ -18,25 +18,22 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="id")
-	private Long id;
-	
-	@Column(name="empID")
-	public String empID;
+	private Long id;	
 	
 	@Column(name="name")
-	public String name;
+	private String name;
 	
 	@Column(name="email")
-	public String email;
+	private String email;
 	
 	@Column(name="mobile")
-	public String mobile;
-	
-	@Column(name="company")
-	public String company;
+	private String mobile;
 	
 	@Column(name="password")
-	public String password;
+	private String password;
+	
+	@Column(name="company")
+	private String company;
 	
 	@ManyToMany(mappedBy = "userentity")
 	private List<EmployeeEntity> employee=new ArrayList<>();
@@ -47,14 +44,6 @@ public class UserEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getEmpID() {
-		return empID;
-	}
-
-	public void setEmpID(String empID) {
-		this.empID = empID;
 	}
 
 	public String getName() {
@@ -80,14 +69,6 @@ public class UserEntity {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-	public String getCompany() {
-		return company;
-	}
-
-	public void setCompany(String company) {
-		this.company = company;
-	}
 	
 	public String getPassword() {
 		return password;
@@ -97,6 +78,14 @@ public class UserEntity {
 		this.password = password;
 	}
 	
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	
 	public List<EmployeeEntity> getEmployee() {
 		return employee;
 	}
@@ -104,17 +93,18 @@ public class UserEntity {
 	public void setEmployee(List<EmployeeEntity> employee) {
 		this.employee = employee;
 	}
+	
+	
 
-	public UserEntity(Long id, String empID, String name, String email, String mobile, String company,
+	public UserEntity(Long id, String name, String email, String mobile, String company,
 			String password) {
 		super();
-		this.id = id;
-		this.empID = empID;
+		this.id = id;		
 		this.name = name;
 		this.email = email;
-		this.mobile = mobile;
-		this.company = company;
+		this.mobile = mobile;	
 		this.password = password;
+		this.company = company;
 	}
 
 	public UserEntity() {
@@ -124,9 +114,11 @@ public class UserEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", empID=" + empID + ", name=" + name + ", email=" + email + ", mobile="
+		return "UserEntity [id=" + id + ",  name=" + name + ", email=" + email + ", mobile="
 				+ mobile + ", company=" + company + " password=" + password + "]";
 	}
+
+	
 
 	
 
