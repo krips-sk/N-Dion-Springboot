@@ -22,7 +22,43 @@ import encoder.AES;
 @RequestMapping("/api")
 public class UserResources {
 	@Autowired
-	private UserRepo userrepo;
+	private UserRepo userrepo;	
+	
+	@PostMapping("/login")
+	public String login(@RequestBody UserEntity user) {
+		String msg = "";
+		try {
+			UserEntity res = userrepo.findByEmail(user.getEmail());
+			if (res != null) {
+				final String secretKey = "ssshhhhhhhhhhh!!!!";
+				String PasswordDecryt = res.getPassword();
+				String decryptedString = AES.decrypt(PasswordDecryt, secretKey);
+				if (decryptedString.equals(user.getPassword())) {
+					msg = "9999";
+				} else {
+					msg = "Password mismatch";
+				}
+
+			} else {
+				msg = "9990";
+			}
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+		return msg;
+	}
+	
+	
+	@PostMapping("/registration")
+	public UserEntity registration(@RequestBody UserEntity user) {
+		final String secretKey = "ssshhhhhhhhhhh!!!!";
+		String encryptedString = AES.encrypt(user.getPassword(), secretKey);
+		user.setPassword(encryptedString);
+		UserEntity register = userrepo.save(user);
+		return register;
+	}
+	
+	
 
 	@PostMapping("/saveuser")
 	public String saveuser(@RequestBody UserEntity user) {
@@ -41,26 +77,27 @@ public class UserResources {
 		}
 		return company;
 	}
-	
-	@GetMapping("/login")
-	public String login(@RequestParam String mail, String password) {
-		String msg="";
-		try {
-			UserEntity res = userrepo.findByEmailAndPassword(mail, password );
-			if(res != null) {
-				msg= "9999";
-			}
-			else {
-				msg= "9990";
-			}
-		}
-		catch(Exception error) {
-			error.printStackTrace();
-		}
-		
-		return msg;
-		
-	}
+
+//	@GetMapping("/login")
+//	public String login(@RequestParam String mail, String password) {
+//		String msg="";
+//		try {
+//			UserEntity res = userrepo.findByEmailAndPassword(mail, password );
+//			if(res != null) {
+//				msg= "9999";
+//			}
+//			else {
+//				msg= "9990";
+//			}
+//		}
+//		catch(Exception error) {
+//			error.printStackTrace();
+//		}
+//		
+//		return msg;		
+//	}
+
+
 
 	@GetMapping("/getuserbyid")
 	public Optional<UserEntity> getuserbyid(@RequestParam("id") Long ID) {
@@ -68,31 +105,23 @@ public class UserResources {
 		return enty;
 	}
 
-	@GetMapping("/getuserbyemp")
-	public UserEntity getuserbyemp(@RequestParam String emp, String name) {
-		UserEntity empDet = userrepo.findByEmpIDAndName(emp, name);
-		return empDet;
-	}
+//	@GetMapping("/getuserbyemp")
+//	public UserEntity getuserbyemp(@RequestParam String emp, String name) {
+//		UserEntity empDet = userrepo.findByEmpIDAndName(emp, name);
+//		return empDet;
+//	}
 
 	@GetMapping("/getalluser")
 	public List<UserEntity> getalluser() {
 		List<UserEntity> alluser = userrepo.findAll();
 		return alluser;
 	}
-	
+
 //	@GetMapping("/login")
 //	public UserEntity login(@RequestParam String user, String password) {
 //		UserEntity loginresp = userrepo.findAll();
 //		return loginresp;
 //	}
+
 	
-	@PostMapping("/registration")
-	public UserEntity registration(@RequestBody UserEntity user) {
-		final String secretKey = "ssshhhhhhhhhhh!!!!";
-	    String encryptedString = AES.encrypt(user.getPassword(), secretKey) ;
-	    user.setPassword(encryptedString);
-//	    String decryptedString = AES.decrypt(encryptedString, secretKey) ;
-		UserEntity register =userrepo.save(user);
-		return register;
-	}
 }
