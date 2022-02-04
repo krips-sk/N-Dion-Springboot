@@ -22,8 +22,8 @@ import encoder.AES;
 @RequestMapping("/api")
 public class UserResources {
 	@Autowired
-	private UserRepo userrepo;	
-	
+	private UserRepo userrepo;
+
 	@PostMapping("/login")
 	public String login(@RequestBody UserEntity user) {
 		String msg = "";
@@ -47,18 +47,26 @@ public class UserResources {
 		}
 		return msg;
 	}
-	
-	
+
 	@PostMapping("/registration")
-	public UserEntity registration(@RequestBody UserEntity user) {
-		final String secretKey = "ssshhhhhhhhhhh!!!!";
-		String encryptedString = AES.encrypt(user.getPassword(), secretKey);
-		user.setPassword(encryptedString);
-		UserEntity register = userrepo.save(user);
-		return register;
+	public String registration(@RequestBody UserEntity user) {
+		UserEntity res = userrepo.findByEmail(user.getEmail());
+		String msg;
+		if (res == null) {
+			final String secretKey = "ssshhhhhhhhhhh!!!!";
+			String encryptedString = AES.encrypt(user.getPassword(), secretKey);
+			user.setPassword(encryptedString);
+			UserEntity register = userrepo.save(user);
+			if (register != null) {
+				msg = "Registered Successfully";
+			} else {
+				msg = "Registered Failed";
+			}
+		} else {
+			msg = "User Already Exist";
+		}
+		return msg;
 	}
-	
-	
 
 	@PostMapping("/saveuser")
 	public String saveuser(@RequestBody UserEntity user) {
@@ -97,8 +105,6 @@ public class UserResources {
 //		return msg;		
 //	}
 
-
-
 	@GetMapping("/getuserbyid")
 	public Optional<UserEntity> getuserbyid(@RequestParam("id") Long ID) {
 		Optional<UserEntity> enty = userrepo.findById(ID);
@@ -123,5 +129,4 @@ public class UserResources {
 //		return loginresp;
 //	}
 
-	
 }
